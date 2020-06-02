@@ -16,6 +16,8 @@ appointmentsRouter.post('/', async (request, response) => {
       password,
     });
 
+    delete user.password;
+
     return response.json(user);
   } catch ({ message }) {
     return response.status(400).json({ error: message });
