@@ -36,11 +36,14 @@ describe('Create Appointment', () => {
       provider_id,
     });
 
-    expect(
-      createAppointmentService.execute({
+    await createAppointmentService
+      .execute({
         date,
         provider_id,
-      }),
-    ).rejects.toBeInstanceOf(AppError);
+      })
+      .catch((error) => {
+        expect(error).toBeInstanceOf(AppError);
+        expect(error.statusCode).toEqual(400);
+      });
   });
 });
