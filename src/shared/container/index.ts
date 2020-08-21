@@ -1,6 +1,8 @@
 import { container } from 'tsyringe';
 
-import '@modules/users/providers/HashProvider';
+import '@modules/users/providers';
+
+import '@shared/container/providers';
 
 import AppointmentsRepository from '@modules/appointments/repositories/AppointmentsRepository';
 import AppointmentsRepositoryImpl from '@modules/appointments/infra/typeorm/repositories/AppointmentsRepository';
