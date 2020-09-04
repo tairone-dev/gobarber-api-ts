@@ -42,15 +42,17 @@ describe('Update User Avatar', () => {
     const nonExistingUser = 'non-existing-user';
     const avatarFilename = 'avatar.jpg';
 
-    await updateUserAvatarService
-      .execute({
+    const error = new AppError(
+      'Only authenticated users can change avatar.',
+      401,
+    );
+
+    await expect(
+      updateUserAvatarService.execute({
         user_id: nonExistingUser,
         avatarFilename,
-      })
-      .catch((error) => {
-        expect(error).toBeInstanceOf(AppError);
-        expect(error.statusCode).toEqual(401);
-      });
+      }),
+    ).rejects.toEqual(error);
   });
 
   it('should delete old avatar when recieving a new one', async () => {

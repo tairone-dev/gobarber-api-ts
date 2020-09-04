@@ -49,15 +49,14 @@ describe('Create Session', () => {
     const email = 'john.doe@example.com';
     const password = '123456';
 
-    await createSessionService
-      .execute({
+    const error = new AppError('Incorrect email/password combination.', 401);
+
+    await expect(
+      createSessionService.execute({
         email,
         password,
-      })
-      .catch((error) => {
-        expect(error).toBeInstanceOf(AppError);
-        expect(error.statusCode).toEqual(401);
-      });
+      }),
+    ).rejects.toEqual(error);
   });
 
   it('should not be able to create a new session with a wrong password', async () => {
@@ -84,14 +83,13 @@ describe('Create Session', () => {
       password,
     });
 
-    await createSessionService
-      .execute({
+    const error = new AppError('Incorrect email/password combination.', 401);
+
+    await expect(
+      createSessionService.execute({
         email,
         password: wrongPassword,
-      })
-      .catch((error) => {
-        expect(error).toBeInstanceOf(AppError);
-        expect(error.statusCode).toEqual(401);
-      });
+      }),
+    ).rejects.toEqual(error);
   });
 });

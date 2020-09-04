@@ -46,15 +46,14 @@ describe('Create User', () => {
       password,
     });
 
-    await createUserService
-      .execute({
+    const error = new AppError('Email address already used.', 400);
+
+    await expect(
+      createUserService.execute({
         name,
         email,
         password,
-      })
-      .catch((error) => {
-        expect(error).toBeInstanceOf(AppError);
-        expect(error.statusCode).toEqual(400);
-      });
+      }),
+    ).rejects.toEqual(error);
   });
 });
