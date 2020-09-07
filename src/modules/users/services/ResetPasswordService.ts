@@ -12,7 +12,7 @@ interface Request {
 }
 
 @injectable()
-class SendForgotEmailPasswordService {
+class ResetPasswordService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: UsersRepository,
@@ -31,7 +31,11 @@ class SendForgotEmailPasswordService {
       throw new AppError('User token does not exists.', 400);
     }
 
+    console.log(userToken);
+
     const user = await this.usersRepository.findById(userToken.user_id);
+
+    console.log(user);
 
     if (!user) {
       throw new AppError('User does not exists.', 400);
@@ -50,4 +54,4 @@ class SendForgotEmailPasswordService {
   }
 }
 
-export default SendForgotEmailPasswordService;
+export default ResetPasswordService;
