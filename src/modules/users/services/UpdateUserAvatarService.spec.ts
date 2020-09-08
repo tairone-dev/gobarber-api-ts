@@ -37,7 +37,7 @@ describe('Update User Avatar', () => {
     expect(userWithAvatar.avatar).toEqual(avatarFilename);
   });
 
-  it('should not be able to update an unexisting users avatar', async () => {
+  it('should not be able to update an non-existing users avatar', async () => {
     const nonExistingUser = 'non-existing-user';
     const avatarFilename = 'avatar.jpg';
 

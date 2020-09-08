@@ -41,7 +41,7 @@ describe('Update Profile', () => {
     expect(updatedUser.email).toEqual(newEmail);
   });
 
-  it('should not be able to update unexisting user', async () => {
+  it('should not be able to update non-existing user', async () => {
     const name = 'Teste';
     const email = 'teste@example.com';
 
@@ -49,7 +49,7 @@ describe('Update Profile', () => {
 
     await expect(
       updateProfileService.execute({
-        user_id: 'unexisting-user',
+        user_id: 'non-existing user',
         name,
         email,
       }),
