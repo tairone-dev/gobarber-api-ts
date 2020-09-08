@@ -1,9 +1,10 @@
 import { uuid } from 'uuidv4';
-import { isEqual, getMonth, getYear } from 'date-fns';
+import { isEqual, getMonth, getYear, getDate } from 'date-fns';
 
 import AppointmentsRepository from '@modules/appointments/repositories/AppointmentsRepository';
 import CreateAppointmentDTO from '@modules/appointments/dtos/CreateAppointmentDTO';
 import FindAllInMonthFromProviderDTO from '@modules/appointments/dtos/FindAllInMonthFromProviderDTO';
+import FindAllInDayFromProviderDTO from '@modules/appointments/dtos/FindAllInDayromProviderDTO';
 
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 
@@ -30,8 +31,26 @@ class AppointmentsRepositoryImpl implements AppointmentsRepository {
     const appointments = this.appointments.filter((appointment) => {
       return (
         appointment.provider_id === provider_id &&
+        getYear(appointment.date) === year &&
+        getMonth(appointment.date) + 1 === month
+      );
+    });
+
+    return appointments;
+  }
+
+  public async findAllInDayFromProvider({
+    provider_id,
+    year,
+    month,
+    day,
+  }: FindAllInDayFromProviderDTO): Promise<Appointment[]> {
+    const appointments = this.appointments.filter((appointment) => {
+      return (
+        appointment.provider_id === provider_id &&
+        getYear(appointment.date) === year &&
         getMonth(appointment.date) + 1 === month &&
-        getYear(appointment.date) === year
+        getDate(appointment.date) === day
       );
     });
 

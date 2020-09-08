@@ -15,7 +15,7 @@ type Response = Array<{
 }>;
 
 @injectable()
-class ListProviderService {
+class ListProviderMonthAvailabilityService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: AppointmentsRepository,
@@ -23,8 +23,8 @@ class ListProviderService {
 
   public async execute({
     provider_id,
-    month,
     year,
+    month,
   }: Request): Promise<Response> {
     const appointments = await this.appointmentsRepository.findAllInMonthFromProvider(
       {
@@ -56,4 +56,4 @@ class ListProviderService {
   }
 }
 
-export default ListProviderService;
+export default ListProviderMonthAvailabilityService;
