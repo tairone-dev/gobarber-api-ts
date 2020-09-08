@@ -8,6 +8,7 @@ const profilesController = new ProfilesController();
 
 usersRouter.use(ensureAuthenticated);
 
+usersRouter.get('/', profilesController.show);
 usersRouter.put('/', profilesController.update);
 
 export default usersRouter;
