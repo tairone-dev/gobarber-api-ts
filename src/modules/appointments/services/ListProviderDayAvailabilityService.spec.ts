@@ -15,11 +15,13 @@ describe('List Provider Day Availability', () => {
   it('should be able to list the day availability from provider', async () => {
     await fakeAppointmentsRepository.create({
       provider_id: 'user',
+      user_id: 'user',
       date: new Date(2020, 4, 20, 8, 0, 0),
     });
 
     await fakeAppointmentsRepository.create({
       provider_id: 'user',
+      user_id: 'user',
       date: new Date(2020, 4, 20, 10, 0, 0),
     });
 
@@ -46,16 +48,19 @@ describe('List Provider Day Availability', () => {
   it('should not be able to list as available from provider if hour is before now', async () => {
     await fakeAppointmentsRepository.create({
       provider_id: 'user',
+      user_id: 'user',
       date: new Date(2020, 4, 20, 8, 0, 0),
     });
 
     await fakeAppointmentsRepository.create({
       provider_id: 'user',
+      user_id: 'user',
       date: new Date(2020, 4, 20, 10, 0, 0),
     });
 
     await fakeAppointmentsRepository.create({
       provider_id: 'user',
+      user_id: 'user',
       date: new Date(2020, 4, 20, 14, 0, 0),
     });
 

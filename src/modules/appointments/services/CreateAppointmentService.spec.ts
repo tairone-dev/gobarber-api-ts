@@ -14,12 +14,18 @@ describe('Create Appointment', () => {
   });
 
   it('should be able to create a new appointment', async () => {
-    const date = new Date('2020-08-19T19:00:00.000Z');
-    const provider_id = '123';
+    const date = new Date(2020, 4, 10, 13);
+    const provider_id = 'provider-id';
+    const user_id = 'user-id';
+
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2020, 4, 10, 12).getTime();
+    });
 
     const appointment = await createAppointmentService.execute({
       date,
       provider_id,
+      user_id,
     });
 
     expect(appointment).toHaveProperty('id');
@@ -28,22 +34,120 @@ describe('Create Appointment', () => {
   });
 
   it('should not be able to create a new appointment with the same schedule date', async () => {
-    const date = new Date('2020-08-19T19:00:00.000Z');
-    const provider_id = '123';
+    const date = new Date(2020, 4, 10, 13);
+    const provider_id = 'provider-id';
+    const user_id = 'user-id';
+
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2020, 4, 10, 12).getTime();
+    });
 
     await createAppointmentService.execute({
       date,
       provider_id,
+      user_id,
     });
 
-    await createAppointmentService
-      .execute({
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2020, 4, 10, 12).getTime();
+    });
+
+    const error = new AppError('This appointment is already booked.', 400);
+
+    await expect(
+      createAppointmentService.execute({
         date,
         provider_id,
-      })
-      .catch((error) => {
-        expect(error).toBeInstanceOf(AppError);
-        expect(error.statusCode).toEqual(400);
-      });
+        user_id,
+      }),
+    ).rejects.toEqual(error);
+  });
+
+  it('should not be able to create an appointment on a past date', async () => {
+    const date = new Date(2020, 4, 10, 11);
+    const provider_id = 'provider-id';
+    const user_id = 'user-id';
+
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2020, 4, 10, 12).getTime();
+    });
+
+    const error = new AppError('Appointment on a past date.', 422);
+
+    await expect(
+      createAppointmentService.execute({
+        date,
+        provider_id,
+        user_id,
+      }),
+    ).rejects.toEqual(error);
+  });
+
+  it('should not be able to create an appointment with same user as provider', async () => {
+    const date = new Date(2020, 4, 10, 11);
+    const provider_id = 'provider-id';
+
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2020, 4, 10, 12).getTime();
+    });
+
+    const error = new AppError(
+      'This user is the provider of the appointment.',
+      422,
+    );
+
+    await expect(
+      createAppointmentService.execute({
+        date,
+        provider_id,
+        user_id: provider_id,
+      }),
+    ).rejects.toEqual(error);
+  });
+
+  it('should not be able to create an appointment before 8am', async () => {
+    const date = new Date(2020, 4, 11, 7);
+    const provider_id = 'provider-id';
+    const user_id = 'user-id';
+
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2020, 4, 10, 12).getTime();
+    });
+
+    const error = new AppError(
+      'You can only book an appointment between 8am and 5pm.',
+      422,
+    );
+
+    await expect(
+      createAppointmentService.execute({
+        date,
+        provider_id,
+        user_id,
+      }),
+    ).rejects.toEqual(error);
+  });
+
+  it('should not be able to create an appointment after 5pm', async () => {
+    const date = new Date(2020, 4, 11, 18);
+    const provider_id = 'provider-id';
+    const user_id = 'user-id';
+
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2020, 4, 10, 12).getTime();
+    });
+
+    const error = new AppError(
+      'You can only book an appointment between 8am and 5pm.',
+      422,
+    );
+
+    await expect(
+      createAppointmentService.execute({
+        date,
+        provider_id,
+        user_id,
+      }),
+    ).rejects.toEqual(error);
   });
 });
