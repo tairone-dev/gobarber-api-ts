@@ -38,6 +38,8 @@ class CreateUserService {
       password: hashedPassword,
     });
 
+    delete user.password;
+
     await this.cacheProvider.invalidatePrefix('providers-list');
 
     return user;
