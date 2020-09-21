@@ -11,19 +11,6 @@ export default class ProvidersController {
 
     const providers = await listProviderService.execute({ user_id });
 
-    const filteredProviders = providers.map(
-      ({ id, name, email, avatar, created_at, updated_at }) => {
-        return {
-          id,
-          name,
-          email,
-          avatar,
-          created_at,
-          updated_at,
-        };
-      },
-    );
-
-    return response.json(filteredProviders);
+    return response.json(providers);
   }
 }
